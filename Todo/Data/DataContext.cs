@@ -12,12 +12,6 @@ public class DataContext : DbContext
         
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=blogDb;Trusted_Connection=True;Encrypt=False");
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Blog>()

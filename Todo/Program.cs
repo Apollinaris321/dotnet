@@ -6,10 +6,9 @@ using Todo.Models;
 using TodoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-//var connectionString = builder.Configuration.GetConnectionString("Blogs") ?? "Data Source=Blogs.db";
 
-// add db
-//builder.Services.AddSqlite<DataContext>("Server=localhost\\SQLEXPRESS;Database=blogDb;Trusted_Connection=True;Encrypt=False");
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -24,6 +23,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddDbContext<DataContext>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

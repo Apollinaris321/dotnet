@@ -1,4 +1,6 @@
-﻿using Todo.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Todo.Data;
+using Todo.Dto;
 using Todo.Models;
 using TodoApi.Models;
 
@@ -18,15 +20,24 @@ public class ProfileService : IProfileService
         throw new NotImplementedException();
     }
 
-    public Task<Profile> Create(Profile profile)
+    public async Task<Profile> Create(ProfileDto profileDto)
     {
-        throw new NotImplementedException();
+        var profile = new Profile{
+                Email = profileDto.Email,
+                Password = profileDto.Password,
+                Username = profileDto.Username
+            };
+        
+        _context.Profiles.Add(profile);
+        await _context.SaveChangesAsync();
+        return profile;
     }
 
-    public async Task<Profile> GetById(long id)
+    public async Task<Profile?> GetById(long id)
     {
-        //var profile = await _context.Profi
-        throw new NotImplementedException();
+        var profile = await _context.Profiles
+            .FirstOrDefaultAsync(p => p.Id == id);
+        return profile ?? null;
     }
 
     public Task<List<Blog>> GetBlogsById(long id)

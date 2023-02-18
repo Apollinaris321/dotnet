@@ -5,14 +5,14 @@ namespace Todo.Dto;
 
 public class BlogDto
 {
-    [Microsoft.Build.Framework.Required]
+    [Required]
     [StringLength(50, MinimumLength = 1)]
     public string Title { get; set; }
     
-    [Microsoft.Build.Framework.Required]
+    [Required]
     public long AuthorId { get; set; }
     
-    [Microsoft.Build.Framework.Required]
+    [Required]
     [StringLength(250, MinimumLength = 1)]
     public string Text { get; set; }
 }

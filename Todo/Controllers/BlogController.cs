@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Todo.Dto;
 using Todo.Models;
 using TodoApi.Services;
 
@@ -50,17 +51,17 @@ public class BlogController : ControllerBase
     }
         
     [HttpPost]
-    public async Task<IActionResult> CreateBlog(Blog blog)
+    public async Task<IActionResult> Create(BlogDto blogDto)
     {
-        await _blogservice.CreateBlog(blog);
+        var blog = await _blogservice.Create(blogDto);
         return Ok(blog);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public async Task<IActionResult> DeleteBlog(long id)
+    public async Task<IActionResult> Delete(long id)
     {
-        var response = await _blogservice.DeleteBlog(id);
+        var response = await _blogservice.Delete(id);
         if (response is false)
         {
             return NotFound();
@@ -69,9 +70,9 @@ public class BlogController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateBlog(Blog blog)
+    public async Task<IActionResult> Update(BlogPatchDto blogDto)
     {
-        var response = await _blogservice.UpdateBlog(blog);
+        var response = await _blogservice.Update(blogDto);
         if (response is null)
         {
             return NotFound();

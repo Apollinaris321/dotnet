@@ -1,4 +1,5 @@
-﻿using Todo.Models;
+﻿using Todo.Dto;
+using Todo.Models;
 using TodoApi.Models;
 
 namespace TodoApi.Services;
@@ -6,8 +7,8 @@ namespace TodoApi.Services;
 public interface IProfileService
 {
     public Task<Boolean> Delete(Profile profile);
-    public Task<Profile> Create(Profile profile);
-    public Task<Profile> GetById(long id);
+    public Task<Profile> Create(ProfileDto profileDto);
+    public Task<Profile?> GetById(long id);
     public Task<List<Blog>> GetBlogsById(long id);
     public Task<List<Comment>> GetCommentsById(long id);
 }
