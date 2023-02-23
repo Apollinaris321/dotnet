@@ -19,6 +19,7 @@ public class BlogService : IBlogService
     {
         var blogs = await _context.Blogs
             .Include(b => b.Comments)
+            .Include(b => b.Profile)
             .ToListAsync();
         return blogs;
     }

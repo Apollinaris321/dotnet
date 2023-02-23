@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
 using Microsoft.OpenApi.Models;
@@ -18,6 +19,10 @@ builder.Services.AddSwaggerGen(c =>
         Description = "Post your blog",
         Version = "v1" });
 });
+builder.Services.AddControllers().AddJsonOptions(
+    x =>
+        x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+        );
 
 // Add services to the container.
 builder.Services.AddControllers();

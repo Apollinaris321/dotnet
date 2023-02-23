@@ -10,7 +10,13 @@ public class Comment
     
     public long? ProfileId { get; set; }
     
+    [JsonIgnore]
+    public Profile Profile { get; set; }
+    
     public long BlogId { get; set; }
+    
+    [JsonIgnore]
+    public Blog Blog { get; set; }
     
     [StringLength(250, MinimumLength = 1)]
     public string Text { get; set; }

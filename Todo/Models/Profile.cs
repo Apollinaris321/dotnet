@@ -5,7 +5,6 @@ namespace TodoApi.Models;
 
 public class Profile
 {
-    [Key]
     public long Id { get; set; }
     
     [Required]

@@ -6,7 +6,6 @@ namespace Todo.Models;
 
 public class Blog
 {
-    [Key]
     public long Id { get; set; }
     
     [Required]
@@ -15,6 +14,7 @@ public class Blog
     
     [Required]
     public long? ProfileId { get; set; }
+    public Profile Profile { get; set; }
     
     [Required]
     [StringLength(250, MinimumLength = 1)]
