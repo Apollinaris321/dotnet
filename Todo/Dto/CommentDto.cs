@@ -6,9 +6,9 @@ namespace Todo.Dto;
 
 public class CommentDto
 {
-     public long AuthorId { get; set; }
+     public int AuthorId { get; set; }
      
-     public long BlogId { get; set; }
+     public int BlogId { get; set; }
      
      [StringLength(250, MinimumLength = 1)]
      public string Text { get; set; }

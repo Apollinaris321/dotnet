@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Todo.Dto;
 using Todo.Models;
+using Todo.Services;
 using TodoApi.Services;
 
 namespace Todo.Controllers;
@@ -17,16 +18,51 @@ public class BlogController : ControllerBase
         _blogservice = blogservice;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpPost]
+    [Route("{id}/upvote")]
+    public async Task<IActionResult> UpvoteBlog(
+        [FromQuery] int blogId,
+        [FromQuery] int profileId
+        )
     {
-        var blogs = await _blogservice.GetAll();
+        await _blogservice.LikeBlog(blogId, profileId);
+        return Ok();
+    }
+ 
+    [HttpPost]
+    [Route("{id}/downvote")]
+    public async Task<IActionResult> DislikeBlog(
+        [FromQuery] int blogId,
+        [FromQuery] int profileId
+        )
+    {
+        var result = await _blogservice.DislikeBlog(blogId, profileId);
+        return result ? Ok() : NotFound();
+    }   
+     
+    [HttpGet]
+    public async Task<IActionResult> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] string order = "new",
+        [FromQuery] string date = "month"
+        )
+    {
+        if (date != "month" && date != "year")
+        {
+            return BadRequest();
+        }
+        if (order != "new" && order != "popular")
+        {
+            return BadRequest();
+        }
+        
+        var blogs = await _blogservice.GetAll(page , order, date);
         return Ok(blogs);   
     }
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<IActionResult> GetById(long id)
+    public async Task<IActionResult> GetById(int id)
     {
         var blog = await _blogservice.GetById(id);
         if (blog is null)
@@ -36,37 +72,34 @@ public class BlogController : ControllerBase
         
         return Ok(blog);   
     }
-    
-    [HttpGet]
-    [Route("{id}/comments")]
-    public async Task<IActionResult> GetCommentsById(long id)
-    {
-        var blog = await _blogservice.GetBlogComments(id);
-        if (blog is null)
-        {
-            return NotFound();
-        }
-        
-        return Ok(blog);   
-    }
+
         
     [HttpPost]
-    public async Task<IActionResult> Create(BlogDto blogDto)
+    public async Task<IActionResult> Create(CreateBlogDto blogDto)
     {
         var blog = await _blogservice.Create(blogDto);
         return Ok(blog);
     }
 
+    [HttpPost]
+    [Route("{id}/comments")]
+    public async Task<IActionResult> AddComment(CommentDto commentDto)
+    {
+        
+        
+        throw new NotImplementedException();
+    }
+
     [HttpDelete]
     [Route("{id}")]
-    public async Task<IActionResult> Delete(long id)
+    public async Task<IActionResult> Delete(int id)
     {
         var response = await _blogservice.Delete(id);
         if (response is false)
         {
             return NotFound();
         }
-        return Ok(response);
+        return Ok();
     }
 
     [HttpPut]

@@ -5,7 +5,7 @@
 namespace Todo.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedNavigationProperty : Migration
+    public partial class ProfileJsonIgnore : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

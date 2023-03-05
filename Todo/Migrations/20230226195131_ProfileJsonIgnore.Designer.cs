@@ -12,8 +12,8 @@ using Todo.Data;
 namespace Todo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230223141951_AddedJsonIgnore")]
-    partial class AddedJsonIgnore
+    [Migration("20230226195131_ProfileJsonIgnore")]
+    partial class ProfileJsonIgnore
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,20 +27,20 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("Todo.Models.Blog", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getutcdate()");
 
-                    b.Property<long?>("ProfileId")
+                    b.Property<int?>("ProfileId")
                         .IsRequired()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -66,22 +66,23 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("TodoApi.Models.Comment", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long>("BlogId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getutcdate()");
 
-                    b.Property<long?>("ProfileId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("ProfileId")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -104,11 +105,11 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("TodoApi.Models.Profile", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -160,7 +161,9 @@ namespace Todo.Migrations
 
                     b.HasOne("TodoApi.Models.Profile", "Profile")
                         .WithMany("Comments")
-                        .HasForeignKey("ProfileId");
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Blog");
 

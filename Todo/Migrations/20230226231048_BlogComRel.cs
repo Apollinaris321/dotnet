@@ -5,22 +5,14 @@
 namespace Todo.Migrations
 {
     /// <inheritdoc />
-    public partial class AddBlogComRelationship : Migration
+    public partial class BlogComRel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<long>(
-                name: "BlogId",
-                table: "Comments",
-                type: "bigint",
-                nullable: false,
-                defaultValue: 0L);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comments_BlogId",
-                table: "Comments",
-                column: "BlogId");
+            migrationBuilder.DropForeignKey(
+                name: "FK_Comments_Blogs_BlogId",
+                table: "Comments");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Comments_Blogs_BlogId",
@@ -28,7 +20,7 @@ namespace Todo.Migrations
                 column: "BlogId",
                 principalTable: "Blogs",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
@@ -38,13 +30,12 @@ namespace Todo.Migrations
                 name: "FK_Comments_Blogs_BlogId",
                 table: "Comments");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Comments_BlogId",
-                table: "Comments");
-
-            migrationBuilder.DropColumn(
-                name: "BlogId",
-                table: "Comments");
+            migrationBuilder.AddForeignKey(
+                name: "FK_Comments_Blogs_BlogId",
+                table: "Comments",
+                column: "BlogId",
+                principalTable: "Blogs",
+                principalColumn: "Id");
         }
     }
 }

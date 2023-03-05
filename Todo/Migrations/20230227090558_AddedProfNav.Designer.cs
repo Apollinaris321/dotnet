@@ -12,8 +12,8 @@ using Todo.Data;
 namespace Todo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230223141354_AddedNavigationProperty")]
-    partial class AddedNavigationProperty
+    [Migration("20230227090558_AddedProfNav")]
+    partial class AddedProfNav
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,20 +27,19 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("Todo.Models.Blog", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getutcdate()");
 
-                    b.Property<long?>("ProfileId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -66,22 +65,22 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("TodoApi.Models.Comment", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long>("BlogId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getutcdate()");
 
-                    b.Property<long?>("ProfileId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -104,11 +103,11 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("TodoApi.Models.Profile", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -143,26 +142,20 @@ namespace Todo.Migrations
                 {
                     b.HasOne("TodoApi.Models.Profile", "Profile")
                         .WithMany("Blogs")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProfileId");
 
                     b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Comment", b =>
                 {
-                    b.HasOne("Todo.Models.Blog", "Blog")
+                    b.HasOne("Todo.Models.Blog", null)
                         .WithMany("Comments")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BlogId");
 
                     b.HasOne("TodoApi.Models.Profile", "Profile")
                         .WithMany("Comments")
                         .HasForeignKey("ProfileId");
-
-                    b.Navigation("Blog");
 
                     b.Navigation("Profile");
                 });

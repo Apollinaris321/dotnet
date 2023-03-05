@@ -12,8 +12,8 @@ using Todo.Data;
 namespace Todo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230216202308_UpdatedAtReworked")]
-    partial class UpdatedAtReworked
+    [Migration("20230301153444_ModifiedVoteRelationship")]
+    partial class ModifiedVoteRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,20 +27,22 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("Todo.Models.Blog", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getutcdate()");
 
-                    b.Property<long?>("ProfileId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -64,24 +66,83 @@ namespace Todo.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("Todo.Models.BlogVotes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("BlogVotes", t =>
+                        {
+                            t.HasTrigger("UpdateBlogLikesDelete");
+
+                            t.HasTrigger("UpdateBlogLikesInsert");
+                        });
+                });
+
+            modelBuilder.Entity("Todo.Models.CommentVotes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("CommentVotes", t =>
+                        {
+                            t.HasTrigger("UpdateCommentLikesDelete");
+
+                            t.HasTrigger("UpdateCommentLikesInsert");
+                        });
+                });
+
             modelBuilder.Entity("TodoApi.Models.Comment", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long>("BlogId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getutcdate()");
 
-                    b.Property<long?>("ProfileId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -104,11 +165,11 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("TodoApi.Models.Profile", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -141,34 +202,75 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("Todo.Models.Blog", b =>
                 {
-                    b.HasOne("TodoApi.Models.Profile", null)
+                    b.HasOne("TodoApi.Models.Profile", "Profile")
                         .WithMany("Blogs")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProfileId");
+
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("Todo.Models.BlogVotes", b =>
+                {
+                    b.HasOne("Todo.Models.Blog", "Blog")
+                        .WithMany("BlogVotes")
+                        .HasForeignKey("BlogId");
+
+                    b.HasOne("TodoApi.Models.Profile", "Profile")
+                        .WithMany("BlogVotes")
+                        .HasForeignKey("ProfileId");
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("Todo.Models.CommentVotes", b =>
+                {
+                    b.HasOne("TodoApi.Models.Comment", "Comment")
+                        .WithMany("CommentVotes")
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("TodoApi.Models.Profile", "Profile")
+                        .WithMany("CommentVotes")
+                        .HasForeignKey("ProfileId");
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Comment", b =>
                 {
                     b.HasOne("Todo.Models.Blog", null)
                         .WithMany("Comments")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BlogId");
 
-                    b.HasOne("TodoApi.Models.Profile", null)
+                    b.HasOne("TodoApi.Models.Profile", "Profile")
                         .WithMany("Comments")
                         .HasForeignKey("ProfileId");
+
+                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("Todo.Models.Blog", b =>
                 {
+                    b.Navigation("BlogVotes");
+
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("TodoApi.Models.Comment", b =>
+                {
+                    b.Navigation("CommentVotes");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Profile", b =>
                 {
+                    b.Navigation("BlogVotes");
+
                     b.Navigation("Blogs");
+
+                    b.Navigation("CommentVotes");
 
                     b.Navigation("Comments");
                 });

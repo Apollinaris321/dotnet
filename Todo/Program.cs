@@ -1,9 +1,10 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Models;
 using Microsoft.OpenApi.Models;
 using Todo.Data;
+using Todo.Migrations;
 using Todo.Models;
+using Todo.Services;
 using TodoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,16 +20,19 @@ builder.Services.AddSwaggerGen(c =>
         Description = "Post your blog",
         Version = "v1" });
 });
-builder.Services.AddControllers().AddJsonOptions(
-    x =>
-        x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
-        );
+
+// builder.Services.AddControllers().AddJsonOptions(
+//     x => 
+//         x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<ICommentVotesService, CommentVotesService>();
+builder.Services.AddScoped<IBlogVoteService, BlogVoteService>();
+builder.Services.AddScoped<IFollowerService, FollowerService>();
 builder.Services.AddDbContext<DataContext>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

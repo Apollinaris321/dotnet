@@ -1,27 +1,31 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices.JavaScript;
-using TodoApi.Models;
+using System.Text.Json.Serialization;
+using Todo.Dto;
 
 namespace Todo.Models;
 
 public class Blog
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
     
     [Required]
     [StringLength(50, MinimumLength = 1)]
     public string Title { get; set; }
     
-    [Required]
-    public long? ProfileId { get; set; }
-    public Profile Profile { get; set; }
     
     [Required]
     [StringLength(250, MinimumLength = 1)]
     public string Text { get; set; }
     
-    public List<Comment> Comments { get; set; }
+    public int? ProfileId { get; set; }
+    public Profile Profile { get; set; }
+    public ICollection<Comment> Comments { get; set; }
     
+    [JsonIgnore]
+    public ICollection<BlogVotes> BlogVotes { get; set; }
+
+    public int Likes { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }

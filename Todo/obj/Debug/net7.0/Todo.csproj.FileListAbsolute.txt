@@ -305,3 +305,4 @@ C:\Users\blura\blogNet\Todo\bin\Debug\net7.0\runtimes\linux-musl-arm\native\libe
 C:\Users\blura\blogNet\Todo\bin\Debug\net7.0\runtimes\linux-musl-arm64\native\libe_sqlite3.so
 C:\Users\blura\blogNet\Todo\bin\Debug\net7.0\runtimes\maccatalyst-arm64\native\libe_sqlite3.dylib
 C:\Users\blura\blogNet\Todo\bin\Debug\net7.0\runtimes\maccatalyst-x64\native\libe_sqlite3.dylib
+C:\Users\blura\blogNet\Todo\bin\Debug\net7.0\BCrypt.Net-Next.dll

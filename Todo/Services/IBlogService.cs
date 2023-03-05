@@ -1,14 +1,22 @@
-﻿using Todo.Dto;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Todo.Dto;
 using Todo.Models;
 
-namespace TodoApi.Services;
+namespace Todo.Services;
 
 public interface IBlogService
 {
-    public Task<List<Blog>> GetAll();
-    public Task<Blog?> GetById(long id);
-    public Task<Blog?> GetBlogComments(long id);
-    public Task<Blog> Create(BlogDto blogDto);
-    public Task<Boolean> Delete(long id);
+    public Task<ICollection<Blog>> GetAll(int page, string order, string date);
+    public Task<Blog?> GetById(int id);
+    public Task<ICollection<Blog>> GetByProfileId(int profileId);
+    public Task<Blog> Create(CreateBlogDto blogDto);
+    public Task<Boolean> Delete(int id);
     public Task<Blog?> Update(BlogPatchDto blogDto);
-}
+    public Task<bool> LikeBlog(int blogId,int profileId);
+    public Task<bool> DislikeBlog(int blogId, int profileId);
+}                                     
+                                      
+                                      
+                                      
+                                      
+                                      
